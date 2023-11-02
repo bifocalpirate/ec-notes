@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group">
+          <label for="website">Website</label>
+          <div class="input-group">
+            <input
+              formControlName="website"
+              class="form-control"
+              id="website"
+              aria-describedby="websiteHelp"
+              placeholder="Enter website"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-primary" (click)="load()">Load</button>
+            </div>
+          </div>
+
+          <small id="keyHelp" class="form-text text-muted"
+            >The name of your website.</small
+          >
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            formControlName="password"
+            class="form-control"
+            id="password"
+            aria-describedby="passwordHelp"
+            placeholder="Enter password"
+          />
+          <small id="keyHelp" class="form-text text-muted"
+            >If you forget your password there is not way to recover it</small
+          >
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label for="plainText">Plaintext</label>
+          <textarea
+            id="plainText"
+            formControlName="plainText"
+            class="form-control"
+            rows="10"
+            aria-describedby="plainTextHelp"
+            placeholder="Plain text will display here"
+          ></textarea>
+          <small id="plaintTextHelp" class="form-text text-muted"
+            >The text you want to encrypt</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary btn-lg float-end" (click)="save()">
+        Save
+      </button>
+    </div>
+  </div>
+</form>
