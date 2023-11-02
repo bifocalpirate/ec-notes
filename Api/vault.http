@@ -1,0 +1,11 @@
+#@host=https://localhost:7096
+@host=https://localhost:44452/
+
+POST {{host}}api/vault
+Content-Type: application/json
+
+{
+    "encryptedContent":"cipher text",
+    "hashOfCurrentContent":"sha of plaintext",
+    "hashOfInitialContent":"xxx"
+}
