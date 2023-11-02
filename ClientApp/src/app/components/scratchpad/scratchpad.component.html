@@ -38,8 +38,41 @@
         </div>
       </div>
       <div class="row">
+        <ul class="nav nav-tabs">
+          <!--<li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li> -->
+          <li *ngFor="let c of tabbedContent" class="nav-item">
+            <a
+              class="nav-link {{ activeTabNumber == c.id ? 'active' : '' }}"
+              role="button"
+              (click)="displayContent(c.id)"
+            >
+              {{ c.tabName }} <i *ngIf="c.id !== 0" class="bi bi-x-circle"></i
+            ></a>
+          </li>
+          <li class="nav-item">
+            <a
+              *ngIf="!addingTab"
+              class="nav-link"
+              role="button"
+              (click)="startAddNewTab()"
+              ><i class="bi bi-plus-circle"> New...</i></a
+            >
+            <input
+              formControlName="newTabName"
+              id="newTabName"
+              class="form-control"
+              type="text"
+              placeholder="new tab name..."
+              *ngIf="addingTab"
+              (blur)="leaveTabAdd()"
+            />
+          </li>
+        </ul>
+      </div>
+      <div class="row">
         <div class="form-group">
-          <label for="plainText">Plaintext</label>
           <textarea
             id="plainText"
             formControlName="plainText"

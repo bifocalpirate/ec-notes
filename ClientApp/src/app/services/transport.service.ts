@@ -13,7 +13,6 @@ export class TransportService {
     website: string,
     outbound: OutboundPayload
   ): Observable<any> {
-    console.log(outbound);
     return this.httpClient.post('api/vault/' + website, outbound, {
       headers: {
         'Content-Type': 'application/json',
@@ -22,10 +21,6 @@ export class TransportService {
   }
 
   public getWebsite(website: string): Observable<any> {
-    return this.httpClient.get(`api/vault/${website}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return this.httpClient.get(`api/vault/${website}`);
   }
 }
