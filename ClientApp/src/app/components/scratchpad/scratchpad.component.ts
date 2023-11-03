@@ -1,4 +1,4 @@
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AES, enc } from 'crypto-js';
 import { SHA256 } from 'crypto-js';
 import { TransportService } from 'src/app/services/transport.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./scratchpad.component.css'],
 })
 export class ScratchpadComponent implements OnInit {
-  form: any;
+  form: FormGroup;
   alerts?: any[];
   tabbedContent: any[] = [];
   addingTab: boolean = false;
@@ -26,9 +26,13 @@ export class ScratchpadComponent implements OnInit {
       plainText: ['', Validators.required],
       password: ['password', Validators.required],
       initialHash: [''],
-      website: [''],
+      website: ['redrover1'],
       newTabName: [''],
     });
+  }
+  onChange(): void {
+    this.tabbedContent.find((x) => x.id === this.activeTabNumber).content =
+      this.form.controls.plainText.value;
   }
   ngOnInit(): void {
     console.log(this.router.url);
@@ -37,6 +41,7 @@ export class ScratchpadComponent implements OnInit {
       tabName: 'Default',
       content: '',
     });
+    this.displayContent(0);
   }
 
   load(): void {
@@ -52,7 +57,11 @@ export class ScratchpadComponent implements OnInit {
           ).toString(enc.Utf8);
           let content = decrypted.substring(0, decrypted.length - 64);
           let initContentSHA = decrypted.substring(decrypted.length - 64);
-          this.form.controls.plainText.setValue(content);
+          this.tabbedContent = [];
+          this.tabbedContent = JSON.parse(content);
+          console.log(this.tabbedContent);
+          this.activeTabNumber = 0;
+          this.displayContent(this.activeTabNumber);
           this.form.controls.initialHash.setValue(initContentSHA);
         } catch (e) {
           console.error('Password is incorrect!');
@@ -60,21 +69,14 @@ export class ScratchpadComponent implements OnInit {
       });
   }
   startAddNewTab(): void {
-    console.log('adding a new tab');
     this.addingTab = true;
   }
   displayContent(tabNumber: number): void {
     let s = this.tabbedContent.find((x) => x.id === tabNumber).content;
-
-    //save the current text into the current tab
-
-    this.tabbedContent.find((x) => x.id === this.activeTabNumber).content =
-      this.form.controls.plainText.value;
-
     this.form.controls.plainText.setValue(s);
     this.activeTabNumber = tabNumber;
   }
-  private getMaxTabNumber(): number {
+  private getNextTabNumber(): number {
     let maxNumber = 0;
     this.tabbedContent.forEach((x) => {
       if (maxNumber <= x.id) {
@@ -86,26 +88,29 @@ export class ScratchpadComponent implements OnInit {
   leaveTabAdd(): void {
     this.addingTab = false;
     if (this.form.controls.newTabName.value.trim().length == 0) return;
-    let tabId = this.getMaxTabNumber();
+    let tabId = this.getNextTabNumber();
     this.tabbedContent.push({
       id: tabId,
       tabName: this.form.controls.newTabName.value,
       content: ``,
     });
     this.activeTabNumber = tabId;
-    this.form.controls.plainText.setValue(``);
+    this.displayContent(this.activeTabNumber);
     this.form.controls.newTabName.setValue(``);
-  }
-  save(): void {
-    let shaOfPlaintext = SHA256(this.form.controls.plainText.value).toString();
     console.log(this.tabbedContent);
+  }
+
+  save(): void {
+    console.log(this.tabbedContent);
+    let content = JSON.stringify(this.tabbedContent);
+    let shaOfContent = SHA256(content).toString();
     this.transportService
       .uploadData(this.form.controls.website.value, {
         encryptedContent: AES.encrypt(
-          this.form.controls.plainText.value + shaOfPlaintext,
+          content + shaOfContent,
           this.form.controls.password.value
         ).toString(),
-        currentHashContent: shaOfPlaintext,
+        currentHashContent: shaOfContent,
         initialHashContent: this.form.controls.initialHash.value,
       })
       .subscribe((response) => {

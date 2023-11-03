@@ -33,7 +33,7 @@
             placeholder="Enter password"
           />
           <small id="keyHelp" class="form-text text-muted"
-            >If you forget your password there is not way to recover it</small
+            >If you forget your password there is no way to recover it</small
           >
         </div>
       </div>
@@ -51,7 +51,7 @@
               {{ c.tabName }} <i *ngIf="c.id !== 0" class="bi bi-x-circle"></i
             ></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="true">
             <a
               *ngIf="!addingTab"
               class="nav-link"
@@ -66,7 +66,7 @@
               type="text"
               placeholder="new tab name..."
               *ngIf="addingTab"
-              (blur)="leaveTabAdd()"
+              (change)="leaveTabAdd()"
             />
           </li>
         </ul>
@@ -76,6 +76,7 @@
           <textarea
             id="plainText"
             formControlName="plainText"
+            (change)="onChange()"
             class="form-control"
             rows="10"
             aria-describedby="plainTextHelp"
