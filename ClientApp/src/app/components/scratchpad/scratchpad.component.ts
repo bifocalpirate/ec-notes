@@ -4,6 +4,7 @@ import { SHA256 } from 'crypto-js';
 import { TransportService } from 'src/app/services/transport.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-scratchpad',
@@ -20,15 +21,21 @@ export class ScratchpadComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private transportService: TransportService
+    private transportService: TransportService,
+    private toastr: ToastrService
   ) {
     this.form = fb.group({
       plainText: ['', Validators.required],
-      password: ['password', Validators.required],
+      password: ['', Validators.required],
       initialHash: [''],
-      website: ['redrover1'],
+      website: ['redrover1', Validators.required],
       newTabName: [''],
     });
+  }
+  disableLoadSiteButton(): boolean {
+    return (
+      !this.form.controls.password.valid || !this.form.controls.website.valid
+    );
   }
   onChange(): void {
     this.tabbedContent.find((x) => x.id === this.activeTabNumber).content =
@@ -45,6 +52,8 @@ export class ScratchpadComponent implements OnInit {
   }
 
   load(): void {
+    this.tabbedContent = [];
+    this.form.controls.plainText.setValue('');
     this.transportService
       .getWebsite(this.form.controls.website.value)
       .subscribe((data) => {
@@ -64,7 +73,7 @@ export class ScratchpadComponent implements OnInit {
           this.displayContent(this.activeTabNumber);
           this.form.controls.initialHash.setValue(initContentSHA);
         } catch (e) {
-          console.error('Password is incorrect!');
+          this.toastr.error('The website could not be decrypted.');
         }
       });
   }
@@ -97,11 +106,9 @@ export class ScratchpadComponent implements OnInit {
     this.activeTabNumber = tabId;
     this.displayContent(this.activeTabNumber);
     this.form.controls.newTabName.setValue(``);
-    console.log(this.tabbedContent);
   }
 
   save(): void {
-    console.log(this.tabbedContent);
     let content = JSON.stringify(this.tabbedContent);
     let shaOfContent = SHA256(content).toString();
     this.transportService
@@ -114,7 +121,7 @@ export class ScratchpadComponent implements OnInit {
         initialHashContent: this.form.controls.initialHash.value,
       })
       .subscribe((response) => {
-        console.log(response);
+        this.toastr.success('Website saved.');
       });
   }
 }

@@ -13,7 +13,13 @@
               placeholder="Enter website"
             />
             <div class="input-group-append">
-              <button class="btn btn-primary" (click)="load()">Load</button>
+              <button
+                class="btn btn-primary"
+                (click)="load()"
+                [disabled]="disableLoadSiteButton()"
+              >
+                Load
+              </button>
             </div>
           </div>
 
@@ -38,7 +44,7 @@
         </div>
       </div>
       <div class="row">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs form-group">
           <!--<li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Active</a>
             </li> -->
