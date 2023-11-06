@@ -9,6 +9,8 @@ import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ScratchpadComponent } from './components/scratchpad/scratchpad.component';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ProgressInterceptorProvider } from './interceptors/ProgressInterceptor';
 
 @NgModule({
   declarations: [
@@ -22,13 +24,14 @@ import { ToastrModule } from 'ngx-toastr';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxSpinnerModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot([
       { path: 'scratchpad', component: ScratchpadComponent, pathMatch: 'full' },
       { path: '', component: HomeComponent, pathMatch: 'full' },
     ]),
   ],
-  providers: [],
+  providers: [ProgressInterceptorProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

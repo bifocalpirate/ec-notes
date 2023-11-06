@@ -95,7 +95,11 @@
       </div>
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary btn-lg float-end" (click)="save()">
+      <button
+        [disabled]="disableSaveButton()"
+        class="btn btn-primary btn-lg float-end"
+        (click)="save()"
+      >
         Save
       </button>
     </div>

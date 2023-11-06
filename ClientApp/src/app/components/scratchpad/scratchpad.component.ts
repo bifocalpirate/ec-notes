@@ -37,6 +37,19 @@ export class ScratchpadComponent implements OnInit {
       !this.form.controls.password.valid || !this.form.controls.website.valid
     );
   }
+
+  disableSaveButton(): boolean {
+    return (
+      !this.form.controls.password.valid ||
+      !this.form.controls.website.valid ||
+      !this.anyTabHasContent()
+    );
+  }
+
+  anyTabHasContent(): boolean {
+    return this.tabbedContent.filter((x) => x.content.length).length > 0;
+  }
+
   onChange(): void {
     this.tabbedContent.find((x) => x.id === this.activeTabNumber).content =
       this.form.controls.plainText.value;
