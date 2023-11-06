@@ -35,7 +35,6 @@ export class ProgressInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log('Requesting.. ', req.urlWithParams);
     this.spinnerService.show();
     //https://careydevelopment.us/blog/angular-how-to-handle-errors-with-an-http-interceptor
     return next.handle(req).pipe(
@@ -56,7 +55,6 @@ export class ProgressInterceptor implements HttpInterceptor {
   private handleServerSideError(error: HttpErrorResponse): boolean {
     switch (error.status) {
       case 0:
-        console.error('Cannot connect to API');
         this.toaster.error('Cannot connect to server!');
         return true;
       case 401:
