@@ -18,7 +18,7 @@
                 (click)="load()"
                 [disabled]="disableLoadSiteButton()"
               >
-                Load
+                Create/Load
               </button>
             </div>
           </div>
@@ -54,7 +54,12 @@
               role="button"
               (click)="displayContent(c.id)"
             >
-              {{ c.tabName }} <i *ngIf="c.id !== 0" class="bi bi-x-circle"></i
+              {{ c.tabName }}
+              <i
+                (click)="deleteTab(c.id)"
+                *ngIf="c.id !== 0"
+                class="bi bi-x-circle"
+              ></i
             ></a>
           </li>
           <li class="nav-item" *ngIf="true">

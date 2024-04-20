@@ -71,7 +71,10 @@ export class ScratchpadComponent implements OnInit {
       .getWebsite(this.form.controls.website.value)
       .subscribe((data) => {
         let p: string = data.data;
-
+        this.tabbedContent = [];
+        if (!p) {
+          return;
+        }
         try {
           let decrypted = AES.decrypt(
             p,
@@ -79,9 +82,7 @@ export class ScratchpadComponent implements OnInit {
           ).toString(enc.Utf8);
           let content = decrypted.substring(0, decrypted.length - 64);
           let initContentSHA = decrypted.substring(decrypted.length - 64);
-          this.tabbedContent = [];
           this.tabbedContent = JSON.parse(content);
-          console.log(this.tabbedContent);
           this.activeTabNumber = 0;
           this.displayContent(this.activeTabNumber);
           this.form.controls.initialHash.setValue(initContentSHA);
@@ -92,6 +93,9 @@ export class ScratchpadComponent implements OnInit {
   }
   startAddNewTab(): void {
     this.addingTab = true;
+  }
+  deleteTab(tabId: number): void {
+    console.log('Delete tab ', tabId);
   }
   displayContent(tabNumber: number): void {
     let s = this.tabbedContent.find((x) => x.id === tabNumber).content;
@@ -122,6 +126,7 @@ export class ScratchpadComponent implements OnInit {
   }
 
   save(): void {
+    
     let content = JSON.stringify(this.tabbedContent);
     let shaOfContent = SHA256(content).toString();
     this.transportService

@@ -72,8 +72,7 @@ public class VaultController : ControllerBase
                 Data = payload.encryptedContent,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
-                PreviousContentHash = payload.currentHashContent,
-                DbVersion = 1,
+                PreviousContentHash = payload.currentHashContent,                
                 Website = website
             });
 
